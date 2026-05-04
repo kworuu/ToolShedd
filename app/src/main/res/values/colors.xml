@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ── Base ── -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+
+    <!-- ── Dark Theme Backgrounds ── -->
+    <color name="background">#242522</color>
+    <color name="surface">#2F302C</color>
+
+    <!-- ── Brand (green) ── -->
+    <color name="primary">#00B14F</color>
+    <color name="primary_dark">#008C3E</color>
+    <color name="primary_light">#EAF3DE</color>
+    <color name="accent">#00B14F</color>
+
+    <!-- ── Text ── -->
+    <color name="text_main">#FFFFFF</color>
+    <color name="text_sub">#9E9E9E</color>
+    <color name="text_secondary">#9E9E9E</color>
+
+    <!-- ── Borders ── -->
+    <color name="border">#3D3E3A</color>
+    <color name="border_gray">#444444</color>
+
+    <!-- ── Status ── -->
+    <color name="success">#00B14F</color>
+    <color name="error">#FF6B6B</color>
+    <color name="pending">#FFE6AC</color>
+    <color name="on_loan">#FFE6AC</color>
+    <color name="unlisted">#3D3E3A</color>
+
+    <!-- ── Legacy names ── -->
+    <color name="charcoal">#242522</color>
+    <color name="concrete_gray">#757575</color>
+
+</resources>

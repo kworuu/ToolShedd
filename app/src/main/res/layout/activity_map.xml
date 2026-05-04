@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fitsSystemWindows="true">
+
+    <!-- ══════════════════════════
+         STICKY BOTTOM NAV
+         ══════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/bottomNav"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/surface"
+        android:elevation="8dp"
+        android:orientation="horizontal">
+
+        <LinearLayout android:id="@+id/navHome"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center" android:orientation="vertical"
+            android:clickable="true" android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="⌂" android:textSize="18sp" android:textColor="@color/text_sub" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Home" android:textSize="9sp" android:textColor="@color/text_sub"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+        <!-- Map (active) -->
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="◎" android:textSize="18sp" android:textColor="@color/primary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Map" android:textSize="9sp" android:textColor="@color/primary"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="≡" android:textSize="18sp" android:textColor="@color/text_sub" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Browse" android:textSize="9sp" android:textColor="@color/text_sub"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+        <LinearLayout android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="✉" android:textSize="18sp" android:textColor="@color/text_sub" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Chat" android:textSize="9sp" android:textColor="@color/text_sub"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+        <LinearLayout android:id="@+id/navProfile"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center" android:orientation="vertical"
+            android:clickable="true" android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="◉" android:textSize="18sp" android:textColor="@color/text_sub" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Profile" android:textSize="9sp" android:textColor="@color/text_sub"
+                android:layout_marginTop="1dp" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <View android:layout_width="match_parent" android:layout_height="1dp"
+        android:layout_above="@id/bottomNav" android:background="@color/border" />
+
+    <!-- ══════════════════════════
+         BOTTOM TOOL PREVIEW CARD
+         Hidden until a pin is tapped
+         ══════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/layoutBottomPreview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomNav"
+        android:orientation="horizontal"
+        android:background="@color/surface"
+        android:elevation="6dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:gravity="center_vertical"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvPreviewToolName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tool name"
+                android:textColor="@color/text_main"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvPreviewMeta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.3 km · @owner · good condition"
+                android:textColor="@color/text_sub"
+                android:textSize="12sp"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnPreviewBorrow"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:text="Borrow"
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            android:backgroundTint="@color/primary" />
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════
+         TOP TOOLBAR + FILTER PILLS
+         ══════════════════════════ -->
+    <LinearLayout
+        android:id="@+id/mapToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/surface"
+        android:orientation="vertical"
+        android:elevation="4dp">
+
+        <!-- Title row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Nearby tools"
+                android:textColor="@color/text_main"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Filter pills -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/filterAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="All"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:background="@drawable/bg_pill_active"
+                    android:textColor="@color/primary"
+                    android:textStyle="bold"
+                    android:layout_marginEnd="6dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/filterPower"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="Power tools"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:background="@drawable/bg_pill_inactive"
+                    android:textColor="@color/text_sub"
+                    android:layout_marginEnd="6dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/filterHand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="Hand tools"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:background="@drawable/bg_pill_inactive"
+                    android:textColor="@color/text_sub"
+                    android:layout_marginEnd="6dp"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+                <TextView
+                    android:id="@+id/filterGarden"
+                    android:layout_width="wrap_content"
+                    android:layout_height="32dp"
+                    android:text="Garden"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:paddingStart="16dp"
+                    android:paddingEnd="16dp"
+                    android:background="@drawable/bg_pill_inactive"
+                    android:textColor="@color/text_sub"
+                    android:clickable="true"
+                    android:focusable="true" />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp"
+            android:background="@color/border" />
+
+    </LinearLayout>
+
+    <!-- ══════════════════════════
+         MAP FRAGMENT
+         Sits between toolbar and preview
+         ══════════════════════════ -->
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.google.android.gms.maps.MapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/mapToolbar"
+        android:layout_above="@id/layoutBottomPreview" />
+
+</RelativeLayout>

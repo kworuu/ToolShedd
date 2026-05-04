@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <!-- Header with back arrow -->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/surface"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp">
+
+        <ImageView
+            android:id="@+id/ivBack"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerVertical="true"
+            android:src="@android:drawable/ic_menu_revert"
+            android:tint="@color/text_main"
+            android:background="@drawable/bg_card"
+            android:padding="4dp"
+            android:contentDescription="Back" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="Tool detail"
+            android:textColor="@color/text_main"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
+    <View android:id="@+id/headerDivider"
+        android:layout_width="match_parent" android:layout_height="1dp"
+        android:layout_below="@id/header" android:background="@color/border" />
+
+    <!-- Borrow button pinned to bottom -->
+    <LinearLayout
+        android:id="@+id/bottomBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/surface"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="16dp">
+
+        <Button
+            android:id="@+id/btnBorrow"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:text="Request to borrow"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:backgroundTint="@color/primary" />
+
+    </LinearLayout>
+
+    <View android:id="@+id/bottomDivider"
+        android:layout_width="match_parent" android:layout_height="1dp"
+        android:layout_above="@id/bottomBar" android:background="@color/border" />
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/headerDivider"
+        android:layout_above="@id/bottomDivider">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Tool name + status badge -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/surface"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="18dp"
+                android:paddingBottom="14dp"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvToolName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tool name"
+                        android:textColor="@color/text_main"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvBrand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Brand · Model"
+                        android:textColor="@color/text_sub"
+                        android:textSize="13sp"
+                        android:layout_marginTop="3dp" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Available"
+                    android:textColor="@color/success"
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_badge_green"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp" />
+
+            </LinearLayout>
+
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/border" />
+
+            <!-- Detail rows -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/surface"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp">
+
+                <!-- Category -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                    android:orientation="horizontal" android:gravity="center_vertical">
+                    <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                        android:text="Category" android:textColor="@color/text_sub" android:textSize="13sp" />
+                    <TextView android:id="@+id/tvCategory" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="—"
+                        android:textColor="@color/text_main" android:textSize="13sp" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="0.5dp"
+                    android:background="@color/border" />
+
+                <!-- Condition -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                    android:orientation="horizontal" android:gravity="center_vertical">
+                    <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                        android:text="Condition" android:textColor="@color/text_sub" android:textSize="13sp" />
+                    <TextView android:id="@+id/tvCondition" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="—"
+                        android:textColor="@color/text_main" android:textSize="13sp" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="0.5dp"
+                    android:background="@color/border" />
+
+                <!-- Owner -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                    android:orientation="horizontal" android:gravity="center_vertical">
+                    <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                        android:text="Owner" android:textColor="@color/text_sub" android:textSize="13sp" />
+                    <TextView android:id="@+id/tvOwner" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="—"
+                        android:textColor="@color/text_main" android:textSize="13sp" />
+                </LinearLayout>
+
+                <View android:layout_width="match_parent" android:layout_height="0.5dp"
+                    android:background="@color/border" />
+
+                <!-- Distance -->
+                <LinearLayout android:layout_width="match_parent" android:layout_height="48dp"
+                    android:orientation="horizontal" android:gravity="center_vertical">
+                    <TextView android:layout_width="100dp" android:layout_height="wrap_content"
+                        android:text="Distance" android:textColor="@color/text_sub" android:textSize="13sp" />
+                    <TextView android:id="@+id/tvDistance" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="—"
+                        android:textColor="@color/text_main" android:textSize="13sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

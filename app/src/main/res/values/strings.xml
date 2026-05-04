@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ToolShedd</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="submit">Submit</string>
+    <string name="register_now">Don\'t have an account? Register now</string>
+    <string name="already_have_account">Already have an account? Log in</string>
+    <string name="welcome_back">Welcome back, %1$s!</string>
+    <string name="active_borrows">Active Borrows</string>
+    <string name="nearby_tools">Nearby Tools</string>
+    <string name="borrow">Borrow</string>
+    <string name="logout">Log Out</string>
+    <string name="bio">DIY enthusiast and local neighbor. Happy to share my tools!</string>
+</resources>
