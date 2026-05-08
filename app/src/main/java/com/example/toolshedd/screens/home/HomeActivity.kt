@@ -25,11 +25,9 @@ class HomeActivity : Activity(), HomeContract.View {
     private lateinit var db: DatabaseHelper
     private var username: String = "User"
 
-    // Active borrows list
     private lateinit var activeBorrowsAdapter: ToolAdapter
     private lateinit var activeBorrowsList: ArrayList<Tool>
 
-    // Nearby tools list
     private lateinit var nearbyToolsAdapter: ToolAdapter
     private lateinit var nearbyToolsList: ArrayList<Tool>
 
@@ -40,17 +38,30 @@ class HomeActivity : Activity(), HomeContract.View {
         db = DatabaseHelper(this)
         presenter = HomePresenter(this, HomeModel())
         username = app().getUserInfo()?.username ?: "User"
-        presenter.start(username)
 
+        presenter.start(username)
         setupActiveBorrowsList()
         setupNearbyToolsList()
         setupNavigation()
+        updateStatCards()
     }
 
     override fun onResume() {
         super.onResume()
-        // Refresh lists when returning from AddTool or ToolDetail
         refreshLists()
+        updateStatCards()
+    }
+
+    // FIX: Populate stat cards from the real database instead of leaving them at 0 / —
+    private fun updateStatCards() {
+        val borrows = db.getActiveBorrows(username)
+        val myTools = db.getToolsByOwner(username)
+        val listedCount = myTools.count { it.status == "Available" || it.status == "On Loan" }
+
+        findViewById<TextView>(R.id.tvStatBorrows).text = borrows.size.toString()
+        findViewById<TextView>(R.id.tvStatListed).text = listedCount.toString()
+        // Rating stays as "—" until a real review system is added
+        // (tvStatRating default in XML is already "—")
     }
 
     private fun setupActiveBorrowsList() {

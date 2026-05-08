@@ -12,28 +12,25 @@ class DatabaseHelper(context: Context) :
         const val DATABASE_NAME = "toolshedd.db"
         const val DATABASE_VERSION = 1
 
-        // --- Users table ---
         const val TABLE_USERS = "users"
         const val COL_USER_ID = "id"
         const val COL_USERNAME = "username"
         const val COL_PASSWORD = "password"
 
-        // --- Tools table ---
         const val TABLE_TOOLS = "tools"
         const val COL_TOOL_ID = "id"
         const val COL_TOOL_NAME = "name"
         const val COL_TOOL_BRAND = "brand"
         const val COL_TOOL_CATEGORY = "category"
         const val COL_TOOL_CONDITION = "condition"
-        const val COL_TOOL_STATUS = "status"          // "Available", "On Loan", "Unlisted"
+        const val COL_TOOL_STATUS = "status"
         const val COL_TOOL_OWNER = "owner_username"
 
-        // --- Borrow Requests table ---
         const val TABLE_BORROWS = "borrow_requests"
         const val COL_BORROW_ID = "id"
         const val COL_BORROW_TOOL_ID = "tool_id"
         const val COL_BORROW_BORROWER = "borrower_username"
-        const val COL_BORROW_STATUS = "status"        // "Active", "Returned", "Pending"
+        const val COL_BORROW_STATUS = "status"
         const val COL_BORROW_DATE = "date"
     }
 
@@ -69,14 +66,12 @@ class DatabaseHelper(context: Context) :
             )
         """.trimIndent())
 
-        // Seed a default user so login still works during development
         val user = ContentValues().apply {
             put(COL_USERNAME, "test")
-            put(COL_PASSWORD, "test")
+            put(COL_PASSWORD, "test12345")
         }
         db.insert(TABLE_USERS, null, user)
 
-        // Seed some sample tools for that user
         val sampleTools = listOf(
             arrayOf("Hand saw", "Stanley · FatMax", "Hand tools", "Good", "Available"),
             arrayOf("Power washer", "Kärcher · K5", "Power tools", "Very Good", "On Loan"),
@@ -106,12 +101,10 @@ class DatabaseHelper(context: Context) :
     // USER OPERATIONS
     // ─────────────────────────────────────────
 
-    /** Returns true if the username+password pair exists. */
     fun checkLogin(username: String, password: String): Boolean {
         val db = readableDatabase
         val cursor = db.query(
-            TABLE_USERS,
-            arrayOf(COL_USER_ID),
+            TABLE_USERS, arrayOf(COL_USER_ID),
             "$COL_USERNAME = ? AND $COL_PASSWORD = ?",
             arrayOf(username, password),
             null, null, null
@@ -121,7 +114,6 @@ class DatabaseHelper(context: Context) :
         return found
     }
 
-    /** Returns null on success, or an error message string. */
     fun registerUser(username: String, password: String): String? {
         if (username.isBlank() || password.isBlank()) return "Fields cannot be empty"
         val db = writableDatabase
@@ -141,7 +133,6 @@ class DatabaseHelper(context: Context) :
     // TOOL OPERATIONS
     // ─────────────────────────────────────────
 
-    /** Fetch all tools owned by a username as an ArrayList. */
     fun getToolsByOwner(username: String): ArrayList<Tool> {
         val list = ArrayList<Tool>()
         val db = readableDatabase
@@ -151,25 +142,12 @@ class DatabaseHelper(context: Context) :
             null, null, null
         )
         if (cursor.moveToFirst()) {
-            do {
-                list.add(
-                    Tool(
-                        id       = cursor.getInt(cursor.getColumnIndexOrThrow(COL_TOOL_ID)),
-                        name     = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_NAME)),
-                        brand    = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_BRAND)),
-                        category = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_CATEGORY)),
-                        condition= cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_CONDITION)),
-                        status   = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_STATUS)),
-                        ownerUsername = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_OWNER))
-                    )
-                )
-            } while (cursor.moveToNext())
+            do { list.add(cursor.toTool()) } while (cursor.moveToNext())
         }
         cursor.close()
         return list
     }
 
-    /** Fetch all tools NOT owned by username (for nearby/browse). */
     fun getAvailableTools(excludeUsername: String): ArrayList<Tool> {
         val list = ArrayList<Tool>()
         val db = readableDatabase
@@ -180,25 +158,24 @@ class DatabaseHelper(context: Context) :
             null, null, null
         )
         if (cursor.moveToFirst()) {
-            do {
-                list.add(
-                    Tool(
-                        id       = cursor.getInt(cursor.getColumnIndexOrThrow(COL_TOOL_ID)),
-                        name     = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_NAME)),
-                        brand    = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_BRAND)),
-                        category = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_CATEGORY)),
-                        condition= cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_CONDITION)),
-                        status   = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_STATUS)),
-                        ownerUsername = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_OWNER))
-                    )
-                )
-            } while (cursor.moveToNext())
+            do { list.add(cursor.toTool()) } while (cursor.moveToNext())
         }
         cursor.close()
         return list
     }
 
-    /** Insert a new tool. Returns the new row id, or -1 on failure. */
+    fun getToolById(toolId: Int): Tool? {
+        val db = readableDatabase
+        val cursor = db.query(
+            TABLE_TOOLS, null,
+            "$COL_TOOL_ID = ?", arrayOf(toolId.toString()),
+            null, null, null
+        )
+        val tool = if (cursor.moveToFirst()) cursor.toTool() else null
+        cursor.close()
+        return tool
+    }
+
     fun addTool(tool: Tool): Long {
         val db = writableDatabase
         val cv = ContentValues().apply {
@@ -212,17 +189,21 @@ class DatabaseHelper(context: Context) :
         return db.insert(TABLE_TOOLS, null, cv)
     }
 
-    /** Delete a tool by its id. Returns number of rows deleted. */
     fun deleteTool(toolId: Int): Int {
         val db = writableDatabase
         return db.delete(TABLE_TOOLS, "$COL_TOOL_ID = ?", arrayOf(toolId.toString()))
+    }
+
+    fun updateToolStatus(toolId: Int, newStatus: String) {
+        val db = writableDatabase
+        val cv = ContentValues().apply { put(COL_TOOL_STATUS, newStatus) }
+        db.update(TABLE_TOOLS, cv, "$COL_TOOL_ID = ?", arrayOf(toolId.toString()))
     }
 
     // ─────────────────────────────────────────
     // BORROW OPERATIONS
     // ─────────────────────────────────────────
 
-    /** Get active borrows for a borrower username. */
     fun getActiveBorrows(borrowerUsername: String): ArrayList<Tool> {
         val list = ArrayList<Tool>()
         val db = readableDatabase
@@ -232,21 +213,80 @@ class DatabaseHelper(context: Context) :
             WHERE b.$COL_BORROW_BORROWER = ? AND b.$COL_BORROW_STATUS = 'Active'
         """.trimIndent(), arrayOf(borrowerUsername))
         if (cursor.moveToFirst()) {
-            do {
-                list.add(
-                    Tool(
-                        id       = cursor.getInt(cursor.getColumnIndexOrThrow(COL_TOOL_ID)),
-                        name     = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_NAME)),
-                        brand    = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_BRAND)),
-                        category = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_CATEGORY)),
-                        condition= cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_CONDITION)),
-                        status   = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_STATUS)),
-                        ownerUsername = cursor.getString(cursor.getColumnIndexOrThrow(COL_TOOL_OWNER))
-                    )
-                )
-            } while (cursor.moveToNext())
+            do { list.add(cursor.toTool()) } while (cursor.moveToNext())
         }
         cursor.close()
         return list
     }
+
+    fun getBorrowHistory(borrowerUsername: String): ArrayList<Tool> {
+        val list = ArrayList<Tool>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT t.* FROM $TABLE_TOOLS t
+            INNER JOIN $TABLE_BORROWS b ON t.$COL_TOOL_ID = b.$COL_BORROW_TOOL_ID
+            WHERE b.$COL_BORROW_BORROWER = ?
+            ORDER BY b.$COL_BORROW_DATE DESC
+        """.trimIndent(), arrayOf(borrowerUsername))
+        if (cursor.moveToFirst()) {
+            do { list.add(cursor.toTool()) } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return list
+    }
+
+    /**
+     * Returns true if [borrowerUsername] has an active borrow record for [toolId].
+     * Used by ToolDetailActivity to decide whether to show "Return tool" vs "Request to borrow".
+     */
+    fun isActiveBorrower(toolId: Int, borrowerUsername: String): Boolean {
+        val db = readableDatabase
+        val cursor = db.query(
+            TABLE_BORROWS, arrayOf(COL_BORROW_ID),
+            "$COL_BORROW_TOOL_ID = ? AND $COL_BORROW_BORROWER = ? AND $COL_BORROW_STATUS = 'Active'",
+            arrayOf(toolId.toString(), borrowerUsername),
+            null, null, null
+        )
+        val found = cursor.count > 0
+        cursor.close()
+        return found
+    }
+
+    /**
+     * Marks the active borrow record as "Returned" and flips the tool back to "Available".
+     * Wrapped in a transaction so both updates succeed or both roll back.
+     * Returns true on success.
+     */
+    fun returnTool(toolId: Int, borrowerUsername: String): Boolean {
+        val db = writableDatabase
+        db.beginTransaction()
+        return try {
+            val borrowCv = ContentValues().apply { put(COL_BORROW_STATUS, "Returned") }
+            val rows = db.update(
+                TABLE_BORROWS, borrowCv,
+                "$COL_BORROW_TOOL_ID = ? AND $COL_BORROW_BORROWER = ? AND $COL_BORROW_STATUS = 'Active'",
+                arrayOf(toolId.toString(), borrowerUsername)
+            )
+            val toolCv = ContentValues().apply { put(COL_TOOL_STATUS, "Available") }
+            db.update(TABLE_TOOLS, toolCv, "$COL_TOOL_ID = ?", arrayOf(toolId.toString()))
+            db.setTransactionSuccessful()
+            rows > 0
+        } finally {
+            db.endTransaction()
+        }
+    }
+
+    // ─────────────────────────────────────────
+    // HELPERS
+    // ─────────────────────────────────────────
+
+    private fun android.database.Cursor.toTool() = Tool(
+        id            = getInt(getColumnIndexOrThrow(COL_TOOL_ID)),
+        name          = getString(getColumnIndexOrThrow(COL_TOOL_NAME)),
+        brand         = getString(getColumnIndexOrThrow(COL_TOOL_BRAND)),
+        category      = getString(getColumnIndexOrThrow(COL_TOOL_CATEGORY)),
+        condition     = getString(getColumnIndexOrThrow(COL_TOOL_CONDITION)),
+        status        = getString(getColumnIndexOrThrow(COL_TOOL_STATUS)),
+        ownerUsername = getString(getColumnIndexOrThrow(COL_TOOL_OWNER))
+    )
 }

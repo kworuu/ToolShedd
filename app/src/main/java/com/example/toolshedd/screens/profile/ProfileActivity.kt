@@ -1,6 +1,7 @@
 package com.example.toolshedd.screens.profile
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.AdapterView
 import android.widget.ImageView
@@ -10,6 +11,7 @@ import com.example.toolshedd.R
 import com.example.toolshedd.data.DatabaseHelper
 import com.example.toolshedd.data.Tool
 import com.example.toolshedd.screens.login.LoginActivity
+import com.example.toolshedd.screens.tooldetail.ToolDetailActivity
 import com.example.toolshedd.utils.app
 import com.example.toolshedd.utils.getButtonView
 import com.example.toolshedd.utils.setTextViewText
@@ -30,7 +32,6 @@ class ProfileActivity : Activity(), ProfileContract.View {
 
         dbHelper = DatabaseHelper(this)
         presenter = ProfilePresenter(this)
-
         currentUsername = app().getUserInfo()?.username ?: "User"
         presenter.start(currentUsername)
 
@@ -40,11 +41,12 @@ class ProfileActivity : Activity(), ProfileContract.View {
         toolAdapter = ToolAdapter(this, toolList)
         listViewTools.adapter = toolAdapter
 
-        // Click listener — show tool details (toast for now)
+        // FIX: Navigate to ToolDetailActivity on click (was only showing a Toast before)
         listViewTools.onItemClickListener = AdapterView.OnItemClickListener { _, _, position, _ ->
             val tool = toolList[position]
-            Toast.makeText(this, "${tool.name} — ${tool.status}", Toast.LENGTH_SHORT).show()
-            // TODO: navigate to ToolDetailActivity and pass tool.id
+            val intent = Intent(this, ToolDetailActivity::class.java)
+            intent.putExtra("TOOL_ID", tool.id)
+            startActivity(intent)
         }
 
         // Long-click listener — delete a tool
@@ -54,14 +56,21 @@ class ProfileActivity : Activity(), ProfileContract.View {
             toolList.removeAt(position)
             toolAdapter.notifyDataSetChanged()
             Toast.makeText(this, "${tool.name} removed", Toast.LENGTH_SHORT).show()
-            true // consume the long click
+            true
         }
 
         // --- Other buttons ---
         val ivBack = findViewById<ImageView>(R.id.ivBack)
         ivBack.setOnClickListener { presenter.onBackClicked() }
-
         getButtonView(R.id.btnLogout).setOnClickListener { presenter.onLogoutClicked() }
+    }
+
+    // Refresh the tool list when returning from ToolDetail (e.g. after a borrow changes status)
+    override fun onResume() {
+        super.onResume()
+        toolList.clear()
+        toolList.addAll(dbHelper.getToolsByOwner(currentUsername))
+        toolAdapter.notifyDataSetChanged()
     }
 
     override fun displayUsername(username: String) {
