@@ -18,7 +18,7 @@ class LoginActivity : Activity(), LoginContract.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-        presenter = LoginPresenter(this, LoginModel())
+        presenter = LoginPresenter(this, LoginModel(this))
 
         getButtonView(R.id.buttonLogin).setOnClickListener {
             val username = getEditTextValue(R.id.edittextUsername)

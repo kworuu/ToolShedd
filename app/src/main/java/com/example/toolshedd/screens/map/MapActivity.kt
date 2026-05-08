@@ -4,8 +4,8 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import com.example.toolshedd.R
-import com.example.toolshedd.screens.home.HomeActivity
 import com.example.toolshedd.screens.profile.ProfileActivity
+import com.example.toolshedd.screens.home.HomeActivity
 import com.example.toolshedd.utils.start
 
 class MapActivity : Activity(), MapContract.View {

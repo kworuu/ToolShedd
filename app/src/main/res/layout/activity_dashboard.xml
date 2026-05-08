@@ -5,9 +5,7 @@
     android:background="@color/background"
     android:fitsSystemWindows="true">
 
-    <!-- ══════════════════════════
-         STICKY BOTTOM NAV
-         ══════════════════════════ -->
+    <!-- STICKY BOTTOM NAV -->
     <LinearLayout
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
@@ -17,151 +15,74 @@
         android:elevation="8dp"
         android:orientation="horizontal">
 
-        <!-- Home (active) -->
-        <LinearLayout
-            android:id="@+id/navHome"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="⌂"
-                android:textSize="18sp"
-                android:textColor="@color/primary" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textSize="9sp"
-                android:textColor="@color/primary"
-                android:layout_marginTop="1dp" />
-
-        </LinearLayout>
-
-        <!-- Map -->
-        <LinearLayout
-            android:id="@+id/navMap"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="◎"
-                android:textSize="18sp"
-                android:textColor="@color/text_sub" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Map"
-                android:textSize="9sp"
-                android:textColor="@color/text_sub"
-                android:layout_marginTop="1dp" />
-
-        </LinearLayout>
-
-        <!-- Browse -->
-        <LinearLayout
-            android:id="@+id/navBrowse"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:focusable="true">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="≡"
-                android:textSize="18sp"
-                android:textColor="@color/text_sub" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Browse"
-                android:textSize="9sp"
-                android:textColor="@color/text_sub"
-                android:layout_marginTop="1dp" />
-
-        </LinearLayout>
-
-        <!-- Chat -->
-        <LinearLayout
-            android:id="@+id/navChat"
+        <LinearLayout android:id="@+id/navHome"
             android:layout_width="0dp" android:layout_height="match_parent"
             android:layout_weight="1" android:gravity="center" android:orientation="vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="✉"
-                android:textSize="18sp"
-                android:textColor="@color/text_sub" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Chat"
-                android:textSize="9sp"
-                android:textColor="@color/text_sub"
-                android:layout_marginTop="1dp" />
-
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="⌂" android:textSize="18sp" android:textColor="@color/primary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Home" android:textSize="9sp" android:textColor="@color/primary" android:layout_marginTop="1dp" />
         </LinearLayout>
 
-        <!-- Profile -->
-        <LinearLayout
-            android:id="@+id/navProfile"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:clickable="true"
-            android:focusable="true">
+        <LinearLayout android:id="@+id/navMap"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center" android:orientation="vertical"
+            android:clickable="true" android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="◎" android:textSize="18sp" android:textColor="@color/text_sub" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Map" android:textSize="9sp" android:textColor="@color/text_sub" android:layout_marginTop="1dp" />
+        </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="◉"
-                android:textSize="18sp"
-                android:textColor="@color/text_sub" />
+        <LinearLayout android:id="@+id/navBrowse"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center" android:orientation="vertical"
+            android:clickable="true" android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="≡" android:textSize="18sp" android:textColor="@color/text_sub" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Browse" android:textSize="9sp" android:textColor="@color/text_sub" android:layout_marginTop="1dp" />
+        </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Profile"
-                android:textSize="9sp"
-                android:textColor="@color/text_sub"
-                android:layout_marginTop="1dp" />
+        <LinearLayout android:id="@+id/navChat"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="✉" android:textSize="18sp" android:textColor="@color/text_sub" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Chat" android:textSize="9sp" android:textColor="@color/text_sub" android:layout_marginTop="1dp" />
+        </LinearLayout>
 
+        <LinearLayout android:id="@+id/navProfile"
+            android:layout_width="0dp" android:layout_height="match_parent"
+            android:layout_weight="1" android:gravity="center" android:orientation="vertical"
+            android:clickable="true" android:focusable="true">
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="◉" android:textSize="18sp" android:textColor="@color/text_sub" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:text="Profile" android:textSize="9sp" android:textColor="@color/text_sub" android:layout_marginTop="1dp" />
         </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Top border above nav -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_above="@id/bottomNav"
-        android:background="@color/border" />
+    <View android:layout_width="match_parent" android:layout_height="1dp"
+        android:layout_above="@id/bottomNav" android:background="@color/border" />
 
-    <!-- ══════════════════════════
-         SCROLLABLE CONTENT
-         ══════════════════════════ -->
+    <!-- FAB: Add Tool -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddTool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomNav"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:src="@android:drawable/ic_input_add"
+        android:contentDescription="Add Tool"
+        android:backgroundTint="@color/primary"
+        android:elevation="6dp" />
+
+    <!-- SCROLLABLE CONTENT -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -179,221 +100,117 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:background="@color/surface"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="18dp"
-                android:paddingBottom="14dp">
-
+                android:paddingStart="16dp" android:paddingEnd="16dp"
+                android:paddingTop="18dp" android:paddingBottom="14dp">
                 <TextView
                     android:id="@+id/tvWelcome"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Good morning"
-                    android:textColor="@color/text_sub"
-                    android:textSize="13sp" />
-
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Welcome back" android:textColor="@color/text_sub" android:textSize="13sp" />
                 <TextView
                     android:id="@+id/tvUsername"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="User"
-                    android:textColor="@color/text_main"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    android:layout_marginTop="2dp" />
-
+                    android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="User" android:textColor="@color/text_main"
+                    android:textSize="24sp" android:textStyle="bold" android:layout_marginTop="2dp" />
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/border" />
+            <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/border" />
 
             <!-- Stat cards -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/surface"
-                android:orientation="horizontal">
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp">
-
-                    <TextView
-                        android:id="@+id/tvStatBorrows"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/primary"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Borrows"
-                        android:textColor="@color/text_sub"
-                        android:textSize="10sp"
-                        android:layout_marginTop="2dp" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:background="@color/surface" android:orientation="horizontal">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:gravity="center" android:orientation="vertical"
+                    android:paddingTop="14dp" android:paddingBottom="14dp">
+                    <TextView android:id="@+id/tvStatBorrows" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="0"
+                        android:textColor="@color/primary" android:textSize="22sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Borrows" android:textColor="@color/text_sub" android:textSize="10sp" android:layout_marginTop="2dp" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/border" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp">
-
-                    <TextView
-                        android:id="@+id/tvStatListed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="0"
-                        android:textColor="@color/primary"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Listed"
-                        android:textColor="@color/text_sub"
-                        android:textSize="10sp"
-                        android:layout_marginTop="2dp" />
-
+                <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/border" />
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:gravity="center" android:orientation="vertical"
+                    android:paddingTop="14dp" android:paddingBottom="14dp">
+                    <TextView android:id="@+id/tvStatListed" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="0"
+                        android:textColor="@color/primary" android:textSize="22sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Listed" android:textColor="@color/text_sub" android:textSize="10sp" android:layout_marginTop="2dp" />
                 </LinearLayout>
-
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/border" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingTop="14dp"
-                    android:paddingBottom="14dp">
-
-                    <TextView
-                        android:id="@+id/tvStatRating"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="—"
-                        android:textColor="@color/primary"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rating"
-                        android:textColor="@color/text_sub"
-                        android:textSize="10sp"
-                        android:layout_marginTop="2dp" />
-
+                <View android:layout_width="1dp" android:layout_height="match_parent" android:background="@color/border" />
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:gravity="center" android:orientation="vertical"
+                    android:paddingTop="14dp" android:paddingBottom="14dp">
+                    <TextView android:id="@+id/tvStatRating" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="—"
+                        android:textColor="@color/primary" android:textSize="22sp" android:textStyle="bold" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Rating" android:textColor="@color/text_sub" android:textSize="10sp" android:layout_marginTop="2dp" />
                 </LinearLayout>
-
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/border"
-                android:layout_marginBottom="16dp" />
+            <View android:layout_width="match_parent" android:layout_height="1dp"
+                android:background="@color/border" android:layout_marginBottom="16dp" />
 
             <!-- Active Borrows label -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingBottom="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Active borrows"
-                    android:textColor="@color/text_sub"
-                    android:textSize="11sp"
-                    android:letterSpacing="0.04" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="10dp"
-                    android:background="@color/border" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:gravity="center_vertical" android:orientation="horizontal"
+                android:paddingStart="16dp" android:paddingEnd="16dp" android:paddingBottom="8dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Active borrows" android:textColor="@color/text_sub" android:textSize="11sp" android:letterSpacing="0.04" />
+                <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1"
+                    android:layout_marginStart="10dp" android:background="@color/border" />
             </LinearLayout>
 
-            <!-- Active borrows container — filled by HomeActivity -->
-            <LinearLayout
-                android:id="@+id/llActiveBorrows"
+            <TextView android:id="@+id/tvNoBorrows"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="16dp" android:layout_marginBottom="8dp"
+                android:text="No active borrows" android:textColor="@color/text_sub"
+                android:textSize="13sp" android:visibility="gone" />
+
+            <!-- Active Borrows ListView -->
+            <ListView
+                android:id="@+id/lvActiveBorrows"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:divider="@null"
+                android:dividerHeight="0dp"
                 android:paddingStart="16dp"
-                android:paddingEnd="16dp" />
+                android:paddingEnd="16dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false" />
 
             <!-- Nearby Tools label -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:paddingTop="16dp"
-                android:paddingBottom="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Nearby tools"
-                    android:textColor="@color/text_sub"
-                    android:textSize="11sp"
-                    android:letterSpacing="0.04" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="1dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="10dp"
-                    android:background="@color/border" />
-
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                android:gravity="center_vertical" android:orientation="horizontal"
+                android:paddingStart="16dp" android:paddingEnd="16dp"
+                android:paddingTop="16dp" android:paddingBottom="8dp">
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                    android:text="Nearby tools" android:textColor="@color/text_sub" android:textSize="11sp" android:letterSpacing="0.04" />
+                <View android:layout_width="0dp" android:layout_height="1dp" android:layout_weight="1"
+                    android:layout_marginStart="10dp" android:background="@color/border" />
             </LinearLayout>
 
-            <!-- Nearby tools container — filled by HomeActivity -->
-            <LinearLayout
-                android:id="@+id/llNearbyTools"
+            <TextView android:id="@+id/tvNoNearby"
+                android:layout_width="wrap_content" android:layout_height="wrap_content"
+                android:layout_marginStart="16dp" android:layout_marginBottom="8dp"
+                android:text="No tools available nearby" android:textColor="@color/text_sub"
+                android:textSize="13sp" android:visibility="gone" />
+
+            <!-- Nearby Tools ListView -->
+            <ListView
+                android:id="@+id/lvNearbyTools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
+                android:divider="@null"
+                android:dividerHeight="0dp"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:paddingBottom="16dp" />
+                android:paddingBottom="80dp"
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
-
     </ScrollView>
 
 </RelativeLayout>

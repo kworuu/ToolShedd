@@ -26,6 +26,9 @@
         <activity android:name=".screens.home.HomeActivity"/>
         <activity android:name=".screens.profile.ProfileActivity"/>
         <activity android:name=".screens.map.MapActivity"/>
+        <activity android:name=".screens.browse.BrowseActivity" />
+        <activity android:name=".screens.addtool.AddToolActivity" />
+        <activity android:name=".screens.tooldetail.ToolDetailActivity" />
     </application>
 
 </manifest>
