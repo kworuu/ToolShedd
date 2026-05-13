@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Required for Google Maps to load tiles -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:name=".app.CustomApplication"
         android:allowBackup="true"
@@ -12,20 +15,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.ToolShedd">
+
+        <!--
+            Google Maps API Key.
+            For a school project you can get a free key from:
+            https://console.cloud.google.com → APIs & Services → Credentials
+            Enable "Maps SDK for Android" then paste your key below.
+            Without a real key the map shows grey tiles with a watermark,
+            but all marker and filter logic still works.
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_MAPS_API_KEY_HERE" />
+
         <activity
             android:name=".screens.login.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".screens.register.RegisterActivity"/>
-        <activity android:name=".screens.home.HomeActivity"/>
-        <activity android:name=".screens.profile.ProfileActivity"/>
-        <activity android:name=".screens.map.MapActivity"/>
+        <activity android:name=".screens.register.RegisterActivity" />
+        <activity android:name=".screens.home.HomeActivity" />
+        <activity android:name=".screens.profile.ProfileActivity" />
+        <activity android:name=".screens.map.MapActivity" />
         <activity android:name=".screens.browse.BrowseActivity" />
         <activity android:name=".screens.addtool.AddToolActivity" />
         <activity android:name=".screens.tooldetail.ToolDetailActivity" />

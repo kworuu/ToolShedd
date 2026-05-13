@@ -3,74 +3,194 @@ package com.example.toolshedd.screens.map
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
 import android.widget.TextView
 import com.example.toolshedd.R
+import com.example.toolshedd.data.DatabaseHelper
+import com.example.toolshedd.data.Tool
 import com.example.toolshedd.screens.browse.BrowseActivity
-import com.example.toolshedd.screens.profile.ProfileActivity
 import com.example.toolshedd.screens.home.HomeActivity
+import com.example.toolshedd.screens.profile.ProfileActivity
+import com.example.toolshedd.screens.tooldetail.ToolDetailActivity
+import com.example.toolshedd.utils.app
 import com.example.toolshedd.utils.start
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapFragment
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
 
-class MapActivity : Activity(), MapContract.View {
+class MapActivity : Activity(), MapContract.View, OnMapReadyCallback {
 
     private lateinit var presenter: MapContract.Presenter
+    private lateinit var dbHelper: DatabaseHelper
+    private var googleMap: GoogleMap? = null
+
+    // Holds all available tools and their markers so we can filter them
+    private var allTools: List<Tool> = emptyList()
+    private val markerToolMap = mutableMapOf<Marker, Tool>()
+    private var activeFilter = "All"
+
+    // Mock coordinates spread around a central point (Cebu City area)
+    // In a real app these would be stored in the DB per tool.
+    private val mockOffsets = listOf(
+        LatLng(10.3157, 123.8854),
+        LatLng(10.3200, 123.8900),
+        LatLng(10.3100, 123.8800),
+        LatLng(10.3250, 123.8780),
+        LatLng(10.3050, 123.8920),
+        LatLng(10.3180, 123.8830),
+        LatLng(10.3130, 123.8870),
+        LatLng(10.3220, 123.8950)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
 
+        dbHelper = DatabaseHelper(this)
         presenter = MapPresenter(this)
 
-        // Home nav
-        findViewById<View>(R.id.navHome).setOnClickListener {
-            presenter.onHomeTabClicked()
-        }
+        // Bottom nav
+        findViewById<View>(R.id.navHome).setOnClickListener { presenter.onHomeTabClicked() }
+        findViewById<View>(R.id.navProfile).setOnClickListener { presenter.onProfileTabClicked() }
+        findViewById<View>(R.id.navBrowse).setOnClickListener { start(BrowseActivity::class.java) }
 
-        // Profile nav
-        findViewById<View>(R.id.navProfile).setOnClickListener {
-            presenter.onProfileTabClicked()
-        }
-
-        // FIX: Wire up Browse nav button (was in XML but never connected)
-        // The Browse tab in activity_map.xml has no id — we use its position index
-        // If you added an id (e.g. navBrowse) in the XML, swap to: R.id.navBrowse
-        val bottomNav = findViewById<android.widget.LinearLayout>(R.id.bottomNav)
-        // Child index 2 = Browse tab (Home=0, Map=1, Browse=2, Chat=3, Profile=4)
-        bottomNav.getChildAt(2)?.setOnClickListener {
-            start(BrowseActivity::class.java)
-        }
-
-        // Filter pill click listeners (visual feedback only for school project)
         setupFilterPills()
 
-        // NOTE: The MapFragment in activity_map.xml uses Google Maps.
-        // For the school project, a Google Maps API key is required in
-        // AndroidManifest.xml under: <meta-data android:name="com.google.android.geo.API_KEY" .../>
-        // Without it the map will show a grey tile with a "For development purposes only" watermark.
-        // The layout and filter UI still work without the key.
+        // Kick off async map load
+        val mapFragment = fragmentManager.findFragmentById(R.id.mapFragment) as MapFragment
+        mapFragment.getMapAsync(this)
     }
 
-    private fun setupFilterPills() {
-        val pills = listOf(R.id.filterAll, R.id.filterPower, R.id.filterHand, R.id.filterGarden)
+    // ─────────────────────────────────────────
+    // OnMapReadyCallback
+    // ─────────────────────────────────────────
 
-        pills.forEach { pillId ->
-            findViewById<TextView>(pillId)?.setOnClickListener { clicked ->
-                // Reset all pills to inactive style
-                pills.forEach { id ->
-                    findViewById<TextView>(id)?.apply {
-                        setBackgroundResource(R.drawable.bg_pill_inactive)
-                        setTextColor(resources.getColor(R.color.text_sub, theme))
-                        typeface = android.graphics.Typeface.DEFAULT
-                    }
+    override fun onMapReady(map: GoogleMap) {
+        googleMap = map
+
+        val currentUser = app().getUserInfo()?.username ?: ""
+        allTools = dbHelper.getAvailableTools(currentUser)
+
+        // Center camera on Cebu City (or wherever your mock data is)
+        val center = LatLng(10.3157, 123.8854)
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(center, 14f))
+
+        placeMarkers(allTools)
+
+        // Show preview card when a pin is tapped
+        map.setOnMarkerClickListener { marker ->
+            val tool = markerToolMap[marker]
+            if (tool != null) showPreviewCard(tool)
+            true // consume event so default info window doesn't appear
+        }
+
+        // Hide preview card when tapping the map background
+        map.setOnMapClickListener {
+            hidePreviewCard()
+        }
+    }
+
+    // ─────────────────────────────────────────
+    // Markers
+    // ─────────────────────────────────────────
+
+    private fun placeMarkers(tools: List<Tool>) {
+        googleMap?.let { map ->
+            map.clear()
+            markerToolMap.clear()
+
+            tools.forEachIndexed { index, tool ->
+                val position = mockOffsets.getOrElse(index) {
+                    // Fallback: scatter extra tools slightly off center
+                    LatLng(10.3157 + (index * 0.002), 123.8854 + (index * 0.002))
                 }
-                // Set the clicked pill to active style
-                (clicked as TextView).apply {
-                    setBackgroundResource(R.drawable.bg_pill_active)
-                    setTextColor(resources.getColor(R.color.primary, theme))
-                    typeface = android.graphics.Typeface.DEFAULT_BOLD
-                }
+                val marker = map.addMarker(
+                    MarkerOptions()
+                        .position(position)
+                        .title(tool.name)
+                        .snippet("@${tool.ownerUsername} · ${tool.condition}")
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                )
+                if (marker != null) markerToolMap[marker] = tool
             }
         }
     }
+
+    // ─────────────────────────────────────────
+    // Bottom preview card
+    // ─────────────────────────────────────────
+
+    private fun showPreviewCard(tool: Tool) {
+        val card = findViewById<View>(R.id.layoutBottomPreview)
+        findViewById<TextView>(R.id.tvPreviewToolName).text = tool.name
+        findViewById<TextView>(R.id.tvPreviewMeta).text =
+            "Nearby · @${tool.ownerUsername} · ${tool.condition}"
+        findViewById<Button>(R.id.btnPreviewBorrow).setOnClickListener {
+            val intent = android.content.Intent(this, ToolDetailActivity::class.java)
+            intent.putExtra("TOOL_ID", tool.id)
+            startActivity(intent)
+        }
+        card.visibility = View.VISIBLE
+    }
+
+    private fun hidePreviewCard() {
+        findViewById<View>(R.id.layoutBottomPreview).visibility = View.GONE
+    }
+
+    // ─────────────────────────────────────────
+    // Filter pills — actually filter the markers now
+    // ─────────────────────────────────────────
+
+    private fun setupFilterPills() {
+        val pills = listOf(
+            R.id.filterAll   to "All",
+            R.id.filterPower to "Power tools",
+            R.id.filterHand  to "Hand tools",
+            R.id.filterGarden to "Garden"
+        )
+
+        pills.forEach { (pillId, category) ->
+            findViewById<TextView>(pillId)?.setOnClickListener {
+                activeFilter = category
+                updatePillStyles(pillId, pills.map { it.first })
+                applyFilter()
+                hidePreviewCard()
+            }
+        }
+    }
+
+    private fun applyFilter() {
+        val filtered = if (activeFilter == "All") {
+            allTools
+        } else {
+            allTools.filter { it.category == activeFilter }
+        }
+        placeMarkers(filtered)
+    }
+
+    private fun updatePillStyles(activePillId: Int, allPillIds: List<Int>) {
+        allPillIds.forEach { id ->
+            findViewById<TextView>(id)?.apply {
+                setBackgroundResource(R.drawable.bg_pill_inactive)
+                setTextColor(resources.getColor(R.color.text_sub, theme))
+                typeface = android.graphics.Typeface.DEFAULT
+            }
+        }
+        findViewById<TextView>(activePillId)?.apply {
+            setBackgroundResource(R.drawable.bg_pill_active)
+            setTextColor(resources.getColor(R.color.primary, theme))
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
+        }
+    }
+
+    // ─────────────────────────────────────────
+    // View contract
+    // ─────────────────────────────────────────
 
     override fun navigateToHome() {
         start(HomeActivity::class.java)
