@@ -14,7 +14,9 @@ import android.widget.Toast
 import com.example.toolshedd.R
 import com.example.toolshedd.data.DatabaseHelper
 import com.example.toolshedd.data.Tool
+import com.example.toolshedd.screens.home.HomeActivity
 import com.example.toolshedd.screens.login.LoginActivity
+import com.example.toolshedd.screens.map.MapActivity
 import com.example.toolshedd.screens.tooldetail.ToolDetailActivity
 import com.example.toolshedd.utils.app
 import com.example.toolshedd.utils.getButtonView
@@ -46,13 +48,19 @@ class ProfileActivity : Activity(), ProfileContract.View {
         currentUsername = app().getUserInfo()?.username ?: "User"
         presenter.start(currentUsername)
 
-        // Dynamic avatar initials
-        val initials = currentUsername.take(2).uppercase()
+        // Dynamic avatar initials (Safe handling)
+        val initials = if (currentUsername.contains("_")) {
+            val parts = currentUsername.split("_")
+            (parts[0].take(1) + parts[1].take(1)).uppercase()
+        } else {
+            currentUsername.take(2).uppercase()
+        }
         findViewById<TextView>(R.id.tvAvatar)?.text = initials
 
         setupMyToolsList()
         setupHistoryList()
         setupTabs()
+        setupBottomNavigation()
 
         findViewById<ImageView>(R.id.ivBack).setOnClickListener { presenter.onBackClicked() }
         getButtonView(R.id.btnLogout).setOnClickListener { presenter.onLogoutClicked() }
@@ -62,6 +70,18 @@ class ProfileActivity : Activity(), ProfileContract.View {
         super.onResume()
         refreshMyTools()
         refreshHistory()
+    }
+
+    private fun setupBottomNavigation() {
+        findViewById<View>(R.id.navHome).setOnClickListener {
+            start(HomeActivity::class.java)
+            finish()
+        }
+        findViewById<View>(R.id.navMap).setOnClickListener {
+            start(MapActivity::class.java)
+            finish()
+        }
+        // Browse and Chat are placeholders for now
     }
 
     // ─────────────────────────────────────────
@@ -166,8 +186,6 @@ class ProfileActivity : Activity(), ProfileContract.View {
         setTabActive(R.id.tabReviews,  R.id.tabReviewsIndicator,  tab == Tab.REVIEWS)
     }
 
-    // FIX: Use ViewGroup instead of android.widget.LinearLayout to avoid cast error.
-    // getChildAt(0) is always the label TextView in each tab container.
     private fun setTabActive(tabId: Int, indicatorId: Int, active: Boolean) {
         val primaryColor = resources.getColor(R.color.primary, theme)
         val subColor     = resources.getColor(R.color.text_sub, theme)
