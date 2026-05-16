@@ -9,17 +9,19 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.ListView
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import com.example.toolshedd.R
 import com.example.toolshedd.data.DatabaseHelper
 import com.example.toolshedd.data.Tool
+import com.example.toolshedd.screens.addtool.AddToolActivity
+import com.example.toolshedd.screens.browse.BrowseActivity
 import com.example.toolshedd.screens.home.HomeActivity
 import com.example.toolshedd.screens.login.LoginActivity
 import com.example.toolshedd.screens.map.MapActivity
 import com.example.toolshedd.screens.tooldetail.ToolDetailActivity
 import com.example.toolshedd.utils.app
-import com.example.toolshedd.utils.getButtonView
 import com.example.toolshedd.utils.setTextViewText
 import com.example.toolshedd.utils.start
 
@@ -61,9 +63,43 @@ class ProfileActivity : Activity(), ProfileContract.View {
         setupHistoryList()
         setupTabs()
         setupBottomNavigation()
+        updateProfileHeader()
+        updateStats()
 
         findViewById<ImageView>(R.id.ivBack).setOnClickListener { presenter.onBackClicked() }
-        getButtonView(R.id.btnLogout).setOnClickListener { presenter.onLogoutClicked() }
+        findViewById<View>(R.id.tvMenu).setOnClickListener { showPopupMenu(it) }
+    }
+
+    private fun showPopupMenu(view: View) {
+        val popup = PopupMenu(this, view)
+        popup.menu.add("Log out")
+        popup.setOnMenuItemClickListener { item ->
+            if (item.title == "Log out") {
+                presenter.onLogoutClicked()
+            }
+            true
+        }
+        popup.show()
+    }
+
+    private fun updateProfileHeader() {
+        val bio = dbHelper.getUserBio(currentUsername) ?: "No bio yet"
+        val location = dbHelper.getUserLocation(currentUsername) ?: "Earth"
+        findViewById<TextView>(R.id.tvBio)?.text = "$bio · $location"
+    }
+
+    private fun updateStats() {
+        val myTools = dbHelper.getToolsByOwner(currentUsername)
+        val history = dbHelper.getBorrowHistory(currentUsername)
+        val listedCount = myTools.size
+        val borrowsCount = history.size
+        val lendsCount = dbHelper.getLendsCount(currentUsername)
+        val rating = dbHelper.getUserRating(currentUsername)
+
+        findViewById<TextView>(R.id.tvListed)?.text = listedCount.toString()
+        findViewById<TextView>(R.id.tvBorrows)?.text = borrowsCount.toString()
+        findViewById<TextView>(R.id.tvLends)?.text = lendsCount.toString()
+        findViewById<TextView>(R.id.tvRating)?.text = if (rating > 0) "%.1f".format(rating) else "New"
     }
 
     override fun onResume() {
@@ -81,7 +117,11 @@ class ProfileActivity : Activity(), ProfileContract.View {
             start(MapActivity::class.java)
             finish()
         }
-        // Browse and Chat are placeholders for now
+        findViewById<View>(R.id.navBrowse).setOnClickListener {
+            start(BrowseActivity::class.java)
+            finish()
+        }
+        // Chat is placeholder for now
     }
 
     // ─────────────────────────────────────────

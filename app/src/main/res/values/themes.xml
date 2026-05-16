@@ -12,6 +12,9 @@
 
         <item name="android:statusBarColor">@color/primary_dark</item>
         <item name="android:windowBackground">@color/background</item>
+
+        <!-- Disable Activity transitions -->
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
 
     <style name="Theme.ToolShedd" parent="Base.Theme.ToolShedd" />

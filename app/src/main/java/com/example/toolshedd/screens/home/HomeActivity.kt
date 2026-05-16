@@ -57,11 +57,11 @@ class HomeActivity : Activity(), HomeContract.View {
         val borrows = db.getActiveBorrows(username)
         val myTools = db.getToolsByOwner(username)
         val listedCount = myTools.count { it.status == "Available" || it.status == "On Loan" }
+        val rating = db.getUserRating(username)
 
         findViewById<TextView>(R.id.tvStatBorrows).text = borrows.size.toString()
         findViewById<TextView>(R.id.tvStatListed).text = listedCount.toString()
-        // Rating stays as "—" until a real review system is added
-        // (tvStatRating default in XML is already "—")
+        findViewById<TextView>(R.id.tvStatRating).text = if (rating > 0) "%.1f".format(rating) else "—"
     }
 
     private fun setupActiveBorrowsList() {
@@ -119,6 +119,7 @@ class HomeActivity : Activity(), HomeContract.View {
 
     override fun displayWelcomeMessage(username: String) {
         findViewById<TextView>(R.id.tvWelcome).text = getString(R.string.welcome_back, username)
+        findViewById<TextView>(R.id.tvUsername).text = username
     }
 
     override fun navigateToProfile(username: String) { start(ProfileActivity::class.java) }

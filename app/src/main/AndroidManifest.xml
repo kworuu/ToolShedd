@@ -16,17 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ToolShedd">
 
-        <!--
-            Google Maps API Key.
-            For a school project you can get a free key from:
-            https://console.cloud.google.com → APIs & Services → Credentials
-            Enable "Maps SDK for Android" then paste your key below.
-            Without a real key the map shows grey tiles with a watermark,
-            but all marker and filter logic still works.
-        -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_MAPS_API_KEY_HERE" />
+            android:value="AIzaSyCAV3ASJLxTsRxm7vw017tQXHBLS_DkKW4" />
 
         <activity
             android:name=".screens.login.LoginActivity"

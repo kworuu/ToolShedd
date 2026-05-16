@@ -10,12 +10,14 @@ class DatabaseHelper(context: Context) :
 
     companion object {
         const val DATABASE_NAME = "toolshedd.db"
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
 
         const val TABLE_USERS = "users"
         const val COL_USER_ID = "id"
         const val COL_USERNAME = "username"
         const val COL_PASSWORD = "password"
+        const val COL_USER_BIO = "bio"
+        const val COL_USER_LOCATION = "location"
 
         const val TABLE_TOOLS = "tools"
         const val COL_TOOL_ID = "id"
@@ -32,6 +34,13 @@ class DatabaseHelper(context: Context) :
         const val COL_BORROW_BORROWER = "borrower_username"
         const val COL_BORROW_STATUS = "status"
         const val COL_BORROW_DATE = "date"
+
+        const val TABLE_REVIEWS = "reviews"
+        const val COL_REVIEW_ID = "id"
+        const val COL_REVIEW_TARGET = "target_username"
+        const val COL_REVIEW_SENDER = "sender_username"
+        const val COL_REVIEW_RATING = "rating"
+        const val COL_REVIEW_COMMENT = "comment"
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -39,7 +48,9 @@ class DatabaseHelper(context: Context) :
             CREATE TABLE $TABLE_USERS (
                 $COL_USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COL_USERNAME TEXT UNIQUE NOT NULL,
-                $COL_PASSWORD TEXT NOT NULL
+                $COL_PASSWORD TEXT NOT NULL,
+                $COL_USER_BIO TEXT,
+                $COL_USER_LOCATION TEXT
             )
         """.trimIndent())
 
@@ -66,11 +77,31 @@ class DatabaseHelper(context: Context) :
             )
         """.trimIndent())
 
+        db.execSQL("""
+            CREATE TABLE $TABLE_REVIEWS (
+                $COL_REVIEW_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                $COL_REVIEW_TARGET TEXT NOT NULL,
+                $COL_REVIEW_SENDER TEXT NOT NULL,
+                $COL_REVIEW_RATING REAL NOT NULL,
+                $COL_REVIEW_COMMENT TEXT
+            )
+        """.trimIndent())
+
         val user = ContentValues().apply {
             put(COL_USERNAME, "test")
             put(COL_PASSWORD, "test12345")
+            put(COL_USER_BIO, "Tool enthusiast & DIY lover")
+            put(COL_USER_LOCATION, "Cebu, PH")
         }
         db.insert(TABLE_USERS, null, user)
+
+        val review = ContentValues().apply {
+            put(COL_REVIEW_TARGET, "test")
+            put(COL_REVIEW_SENDER, "admin")
+            put(COL_REVIEW_RATING, 4.5)
+            put(COL_REVIEW_COMMENT, "Great lender!")
+        }
+        db.insert(TABLE_REVIEWS, null, review)
 
         val sampleTools = listOf(
             arrayOf("Hand saw", "Stanley · FatMax", "Hand tools", "Good", "Available"),
@@ -91,6 +122,7 @@ class DatabaseHelper(context: Context) :
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        db.execSQL("DROP TABLE IF EXISTS $TABLE_REVIEWS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_BORROWS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_TOOLS")
         db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
@@ -127,6 +159,22 @@ class DatabaseHelper(context: Context) :
         } catch (e: Exception) {
             "Username already taken"
         }
+    }
+
+    fun getUserBio(username: String): String? {
+        val db = readableDatabase
+        val cursor = db.query(TABLE_USERS, arrayOf(COL_USER_BIO), "$COL_USERNAME = ?", arrayOf(username), null, null, null)
+        val bio = if (cursor.moveToFirst()) cursor.getString(0) else null
+        cursor.close()
+        return bio
+    }
+
+    fun getUserLocation(username: String): String? {
+        val db = readableDatabase
+        val cursor = db.query(TABLE_USERS, arrayOf(COL_USER_LOCATION), "$COL_USERNAME = ?", arrayOf(username), null, null, null)
+        val location = if (cursor.moveToFirst()) cursor.getString(0) else null
+        cursor.close()
+        return location
     }
 
     // ─────────────────────────────────────────
@@ -250,6 +298,30 @@ class DatabaseHelper(context: Context) :
         val found = cursor.count > 0
         cursor.close()
         return found
+    }
+
+    fun getLendsCount(username: String): Int {
+        val db = readableDatabase
+        val cursor = db.rawQuery("""
+            SELECT COUNT(*) FROM $TABLE_BORROWS b
+            INNER JOIN $TABLE_TOOLS t ON b.$COL_BORROW_TOOL_ID = t.$COL_TOOL_ID
+            WHERE t.$COL_TOOL_OWNER = ?
+        """.trimIndent(), arrayOf(username))
+        val count = if (cursor.moveToFirst()) cursor.getInt(0) else 0
+        cursor.close()
+        return count
+    }
+
+    fun getUserRating(username: String): Float {
+        val db = readableDatabase
+        val cursor = db.query(
+            TABLE_REVIEWS, arrayOf("AVG($COL_REVIEW_RATING)"),
+            "$COL_REVIEW_TARGET = ?", arrayOf(username),
+            null, null, null
+        )
+        val rating = if (cursor.moveToFirst()) cursor.getFloat(0) else 0f
+        cursor.close()
+        return rating
     }
 
     /**
