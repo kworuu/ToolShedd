@@ -34,19 +34,6 @@ class MapActivity : Activity(), MapContract.View, OnMapReadyCallback {
     private val markerToolMap = mutableMapOf<Marker, Tool>()
     private var activeFilter = "All"
 
-    // Mock coordinates spread around a central point (Cebu City area)
-    // In a real app these would be stored in the DB per tool.
-    private val mockOffsets = listOf(
-        LatLng(10.3157, 123.8854),
-        LatLng(10.3200, 123.8900),
-        LatLng(10.3100, 123.8800),
-        LatLng(10.3250, 123.8780),
-        LatLng(10.3050, 123.8920),
-        LatLng(10.3180, 123.8830),
-        LatLng(10.3130, 123.8870),
-        LatLng(10.3220, 123.8950)
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_map)
@@ -104,17 +91,18 @@ class MapActivity : Activity(), MapContract.View, OnMapReadyCallback {
             map.clear()
             markerToolMap.clear()
 
-            tools.forEachIndexed { index, tool ->
-                val position = mockOffsets.getOrElse(index) {
-                    // Fallback: scatter extra tools slightly off center
-                    LatLng(10.3157 + (index * 0.002), 123.8854 + (index * 0.002))
-                }
+            tools.forEach { tool ->
+                // Skip tools with no real location set
+                if (tool.lat == 0.0 && tool.lng == 0.0) return@forEach
+
+                val position = LatLng(tool.lat, tool.lng)
                 val marker = map.addMarker(
                     MarkerOptions()
                         .position(position)
                         .title(tool.name)
                         .snippet("@${tool.ownerUsername} · ${tool.condition}")
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
+                        .icon(BitmapDescriptorFactory.defaultMarker(
+                            BitmapDescriptorFactory.HUE_GREEN))
                 )
                 if (marker != null) markerToolMap[marker] = tool
             }

@@ -18,7 +18,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="" />
+            android:value="AIzaSyCAV3ASJLxTsRxm7vw017tQXHBLS_DkKW4" />
 
         <activity
             android:name=".screens.login.LoginActivity"
@@ -35,6 +35,7 @@
         <activity android:name=".screens.browse.BrowseActivity" />
         <activity android:name=".screens.addtool.AddToolActivity" />
         <activity android:name=".screens.tooldetail.ToolDetailActivity" />
+        <activity android:name=".screens.addtool.LocationPickerActivity" />
     </application>
 
 </manifest>

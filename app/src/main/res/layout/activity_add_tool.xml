@@ -83,6 +83,36 @@
             android:paddingTop="24dp"
             android:paddingBottom="16dp">
 
+            <!-- Image picker -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="PHOTO"
+                android:textColor="@color/text_sub"
+                android:textSize="10sp"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="6dp" />
+
+            <!-- Preview image (hidden until picked) -->
+            <ImageView
+                android:id="@+id/ivToolImagePreview"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/bg_card"
+                android:visibility="gone"
+                android:layout_marginBottom="8dp" />
+
+            <Button
+                android:id="@+id/btnPickImage"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Choose photo from gallery"
+                android:textColor="@color/text_main"
+                android:textSize="14sp"
+                android:backgroundTint="@color/surface"
+                android:layout_marginBottom="20dp" />
+
             <!-- Tool name -->
             <TextView
                 android:layout_width="wrap_content"
@@ -169,13 +199,35 @@
                 android:paddingEnd="10dp"
                 android:layout_marginBottom="8dp" />
 
+            <!-- Location -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Location will be set to your current area automatically."
+                android:text="LOCATION"
                 android:textColor="@color/text_sub"
-                android:textSize="11sp"
-                android:layout_marginTop="8dp" />
+                android:textSize="10sp"
+                android:letterSpacing="0.08"
+                android:layout_marginBottom="6dp"
+                android:layout_marginTop="12dp" />
+
+            <Button
+                android:id="@+id/btnPickLocation"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:text="Set tool location"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:backgroundTint="@color/surface"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:id="@+id/tvLocationLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No location set"
+                android:textColor="@color/text_sub"
+                android:textSize="12sp"
+                android:layout_marginBottom="16dp" />
 
         </LinearLayout>
 

@@ -10,7 +10,7 @@ class DatabaseHelper(context: Context) :
 
     companion object {
         const val DATABASE_NAME = "toolshedd.db"
-        const val DATABASE_VERSION = 2
+        const val DATABASE_VERSION = 4
 
         const val TABLE_USERS = "users"
         const val COL_USER_ID = "id"
@@ -41,6 +41,10 @@ class DatabaseHelper(context: Context) :
         const val COL_REVIEW_SENDER = "sender_username"
         const val COL_REVIEW_RATING = "rating"
         const val COL_REVIEW_COMMENT = "comment"
+        const val COL_TOOL_LAT = "lat"
+        const val COL_TOOL_LNG = "lng"
+        const val COL_TOOL_DESCRIPTION = "description"
+
     }
 
     override fun onCreate(db: SQLiteDatabase) {
@@ -62,7 +66,10 @@ class DatabaseHelper(context: Context) :
                 $COL_TOOL_CATEGORY TEXT,
                 $COL_TOOL_CONDITION TEXT,
                 $COL_TOOL_STATUS TEXT DEFAULT 'Available',
-                $COL_TOOL_OWNER TEXT NOT NULL
+                $COL_TOOL_OWNER TEXT NOT NULL,
+                $COL_TOOL_LAT REAL DEFAULT 0.0,
+                $COL_TOOL_LNG REAL DEFAULT 0.0,
+                ${'$'}COL_TOOL_DESCRIPTION TEXT DEFAULT ''
             )
         """.trimIndent())
 
@@ -233,6 +240,9 @@ class DatabaseHelper(context: Context) :
             put(COL_TOOL_CONDITION, tool.condition)
             put(COL_TOOL_STATUS, tool.status)
             put(COL_TOOL_OWNER, tool.ownerUsername)
+            put(COL_TOOL_LAT, tool.lat)
+            put(COL_TOOL_LNG, tool.lng)
+            put(COL_TOOL_DESCRIPTION, tool.description)
         }
         return db.insert(TABLE_TOOLS, null, cv)
     }
@@ -359,6 +369,10 @@ class DatabaseHelper(context: Context) :
         category      = getString(getColumnIndexOrThrow(COL_TOOL_CATEGORY)),
         condition     = getString(getColumnIndexOrThrow(COL_TOOL_CONDITION)),
         status        = getString(getColumnIndexOrThrow(COL_TOOL_STATUS)),
-        ownerUsername = getString(getColumnIndexOrThrow(COL_TOOL_OWNER))
+        ownerUsername = getString(getColumnIndexOrThrow(COL_TOOL_OWNER)),
+        lat = getDouble(getColumnIndexOrThrow(COL_TOOL_LAT)),
+        lng = getDouble(getColumnIndexOrThrow(COL_TOOL_LNG)),
+        description = getString(getColumnIndexOrThrow(COL_TOOL_DESCRIPTION)),
+        imageUrl    = ""  // images live in Firestore, not SQLite
     )
 }

@@ -10,6 +10,8 @@ import android.widget.TextView
 import com.example.toolshedd.R
 import com.example.toolshedd.utils.app
 import com.example.toolshedd.utils.toast
+import com.bumptech.glide.Glide
+import com.example.toolshedd.data.ToolFirestoreHelper
 
 class ToolDetailActivity : Activity(), ToolDetailContract.View {
 
@@ -39,6 +41,22 @@ class ToolDetailActivity : Activity(), ToolDetailContract.View {
         intent.putExtra("CURRENT_USER", currentUser)
 
         presenter.start(toolId)
+
+        ToolFirestoreHelper.getToolMeta(toolId) { imageUrl, description ->
+            runOnUiThread {
+                if (imageUrl.isNotBlank()) {
+                    val ivImage = findViewById<ImageView>(R.id.ivToolImage)
+                    ivImage.visibility = View.VISIBLE
+                    Glide.with(this).load(imageUrl).into(ivImage)
+                }
+                if (description.isNotBlank()) {
+                    val layout = findViewById<View>(R.id.layoutDescription)
+                    val tvDesc = findViewById<TextView>(R.id.tvDescription)
+                    layout.visibility = View.VISIBLE
+                    tvDesc.text = description
+                }
+            }
+        }
 
         findViewById<ImageView>(R.id.ivBack).setOnClickListener {
             presenter.onBackClicked()
